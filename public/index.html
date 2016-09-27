@@ -1,0 +1,132 @@
+<!doctype html>
+
+<!-- ASSIGN OUR ANGULAR MODULE -->
+<html ng-app="app_preset">
+<head>
+	<!-- META -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
+
+	<title>Node/Angular Preset App</title>
+
+	<!-- SCROLLS -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"><!-- load bootstrap -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+	<style>
+		html 					{ overflow-y:scroll; }
+		body 					{ padding-top:50px; }
+		#preset-list 				{ margin-bottom:30px; }
+		#preset-form 	 			{ margin-bottom:50px; }
+	</style>
+
+	<!-- SPELLS -->
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script><!-- load angular -->
+
+	<script src="js/controllers/main.js"></script> <!-- load up our controller -->
+	<script src="js/services/presets.js"></script> <!-- load our preset service -->
+	<script src="js/core.js"></script> <!-- load our main application -->
+
+</head>
+<!-- SET THE CONTROLLER -->
+<body ng-controller="mainController">
+	<div class="container">
+
+		<!-- HEADER AND preset COUNT -->
+		<div class="jumbotron text-center">
+			<h1>Presets <span class="label label-info">{{ presets.length }}</span></h1>
+		</div>
+
+		<!-- preset LIST -->
+		<div id="preset-list" class="row">
+			<div class="col-sm-6 col-sm-offset-0">
+
+
+
+				<!-- LOOP OVER THE presetS IN $scope.presets -->
+				<div class="checkbox" ng-repeat="preset in presets">
+					<label>
+					<table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Low Band</th>
+								<th>Low peak/shelf</th>
+								<th>Low Freq</th>
+								<th>Low Gain</th>
+								<th>Low Mid Band</th>
+								<th>Low/Mid HI/Low Q</th>
+								<th>Low/Mid freq(Hz)</th>
+								<th>Low/mid gain</th>
+								<th>Hi/mid band/th>
+								<th>Hi/Mid freq (kHz)</th>
+								<th>Hi/Mid gain</th>
+								<th>Hi band</th>
+								<th>Hi peak/shelf</th>
+								<th>Hi freq (kHz)</th>
+								<th>Hi gain</th>
+								<th>Delete?</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>{{preset.name}}</td>
+								<td>{{preset.low_band}}</td>
+								<td>{{preset.low_peak_shelf}}</td>
+								<td>{{preset.low_freq_hz}}</td>
+								<td>{{display_postive_negative_number(preset.low_gain)}}</td>
+								<td>{{preset.low_mid_band}}</td>
+								<td>{{preset.low_mid_hi_low_q}}</td>
+								<td>{{preset.low_mid_freq_hz}}</td>
+								<td>{{display_postive_negative_number(preset.low_mid_gain)}}</td>
+								<td>{{preset.hi_mid_band}}</td>
+								<td>{{preset.hi_mid_freq_khz}}</td>
+								<td>{{display_postive_negative_number(preset.hi_mid_gain)}}</td>
+								<td>{{display_postive_negative_number(preset.hi_band)}}</td>
+								<td>{{preset.hi_peak_shelf}}</td>
+								<td>{{preset.hi_freq_khz}}</td>
+								<td>{{display_postive_negative_number(preset.hi_gain)}}</td>
+								<td><button type="button" ng-click="deletepreset(preset._id)">Remove</input></td>
+							</tr>
+						</tbody>
+					</table>
+					</label>
+				</div>
+
+				<p class="text-center" ng-show="loading">
+					<span class="fa fa-spinner fa-spin fa-3x"></span>
+				</p>
+
+			</div>
+		</div>
+
+		<!-- FORM TO CREATE presetS -->
+		<div id="preset-form" class="row">
+			<div class="col-sm-8 col-sm-offset-2 text-center">
+				<form>
+					<div class="form-group">
+
+						<input type="text" class="form-control input-lg text-center" placeholder="name" ng-model="formData.name">
+						<input type="text" class="form-control input-lg text-center" placeholder="Low band" ng-model="formData.low_band">
+						<input type="text" class="form-control input-lg text-center" placeholder="Low peak/shelf" ng-model="formData.low_peak_shelf">
+						<input type="text" class="form-control input-lg text-center" placeholder="Low freq (Hz)" ng-model="formData.low_freq_hz">
+						<input type="text" class="form-control input-lg text-center" placeholder="Low gain" ng-model="formData.low_gain">
+						<input type="text" class="form-control input-lg text-center" placeholder="Low/Mid band" ng-model="formData.low_mid_band">
+						<input type="text" class="form-control input-lg text-center" placeholder="Low/Mid Hi/Low Q" ng-model="formData.low_mid_hi_low_q">
+						<input type="text" class="form-control input-lg text-center" placeholder="Low/Mid freq (Hz)" ng-model="formData.low_mid_freq_hz">
+						<input type="text" class="form-control input-lg text-center" placeholder="Low/mid gain" ng-model="formData.low_mid_gain">
+						<input type="text" class="form-control input-lg text-center" placeholder="Hi/Mid band" ng-model="formData.hi_mid_band">
+						<input type="text" class="form-control input-lg text-center" placeholder="Hi/Mid freq (kHz)" ng-model="formData.hi_mid_freq_khz">
+						<input type="text" class="form-control input-lg text-center" placeholder="Hi/Mid gain" ng-model="formData.hi_mid_gain">
+						<input type="text" class="form-control input-lg text-center" placeholder="Hi peak/shelf" ng-model="formData.hi_peak_shelf">
+						<input type="text" class="form-control input-lg text-center" placeholder="Hi freq (kHz)" ng-model="formData.hi_freq_khz">
+						<input type="text" class="form-control input-lg text-center" placeholder="Hi gain" ng-model="formData.hi_gain"></div>
+						<input type="text" class="form-control input-lg text-center" placeholder="Hi band" ng-model="formData.hi_band"></div>
+
+					<!-- createpreset() WILL CREATE NEW presetS -->
+					<button type="submit" class="btn btn-primary btn-lg" ng-click="createpreset()">Add</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
